@@ -10,12 +10,14 @@ import {
   getSnapshotTime,
   secondsToTime,
 } from '../utils'
+import SessionGraph from './SessionGraph'
 
 interface Props {
+  averagePace: number
   session: Session
 }
 
-const SessionBlock = ({ session }: Props) => {
+const SessionBlock = ({ averagePace, session }: Props) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -31,13 +33,27 @@ const SessionBlock = ({ session }: Props) => {
           <span className='px-2 py-1 font-black bg-green-500 text-green-100 rounded-md'>
             {date(session.dateTime).format('DD MMM YYYY')}
           </span>
+          <span className='px-2 py-1 font-black bg-purple-500 text-purple-100 rounded-md'>
+            {secondsToTime(
+              Math.round(
+                session.snapshots[session.snapshots.length - 1].time /
+                  session.snapshots[session.snapshots.length - 1].mileage
+              )
+            )}{' '}
+            / mile
+          </span>
         </div>
-        <button
-          onClick={() => setOpen(!open)}
-          className='ml-auto text-sm bg-transparent border-2 border-blue-600 font-black text-blue-600 rounded-md px-3 py-2 hover:text-white hover:bg-blue-600'
-        >
-          {open ? 'CLOSE' : 'OPEN'}
-        </button>
+        <div className='ml-auto flex flex-row items-center gap-3'>
+          <span className='w-6 h-6 rounded-full bg-yellow-600 text-center text-yellow-50 font-black'>
+            {session.difficulty}
+          </span>
+          <button
+            onClick={() => setOpen(!open)}
+            className='text-sm bg-transparent border-2 border-blue-600 font-black text-blue-600 rounded-md px-3 py-2 hover:text-white hover:bg-blue-600'
+          >
+            {open ? 'CLOSE' : 'OPEN'}
+          </button>
+        </div>
       </div>
       <motion.div
         variants={{
@@ -111,7 +127,11 @@ const SessionBlock = ({ session }: Props) => {
               },
               {
                 id: 'graphs',
-                content: <div>LOL</div>,
+                content: (
+                  <div className='h-96'>
+                    <SessionGraph averagePace={averagePace} session={session} />
+                  </div>
+                ),
                 title: 'Pace Graph',
               },
             ]}

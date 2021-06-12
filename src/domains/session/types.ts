@@ -39,4 +39,4 @@ const session1: Session = {
   ],
 }
 
-export const sessions: Session[] = [session1, session2]
+export const sessions: Session[] = [session2, session1]

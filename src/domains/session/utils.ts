@@ -5,6 +5,33 @@ export const getSessionDistance = (session: Session) => {
   return lastSnapshot.mileage
 }
 
+export const getSessionFinalTime = (session: Session) => {
+  const lastSnapshot = session.snapshots[session.snapshots.length - 1]
+  return lastSnapshot.time
+}
+
+export const getRawSessionPace = (session: Session) => {
+  const snapshot = session.snapshots[session.snapshots.length - 1]
+  return Math.round(snapshot.time / snapshot.mileage)
+}
+
+export const getRawPaceFromSessions = (sessionSnapshots: Session[]) => {
+  const totalSeconds = sessionSnapshots.reduce(
+    (prev, session) => prev + getSessionFinalTime(session),
+    0
+  )
+  const totalDistance = sessionSnapshots.reduce(
+    (prev, session) => prev + getSessionDistance(session),
+    0
+  )
+
+  return Math.floor(totalSeconds / totalDistance)
+}
+
+export const getPaceFromSessions = (sessionSnapshots: Session[]) => {
+  return secondsToTime(getRawPaceFromSessions(sessionSnapshots))
+}
+
 export const getSessionDuration = (
   session: Session,
   format: 'long' | 'short'

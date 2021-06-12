@@ -1,6 +1,15 @@
+import Leaderboard from '~domains/records/Leaderboard'
 import SessionBlock from '~domains/session/components/SessionBlock'
 import { sessions } from '~domains/session/types'
-import { secondsToDuration } from '~domains/session/utils'
+import {
+  getPaceFromSessions,
+  getRawPaceFromSessions,
+  getRawSessionPace,
+  getSessionFinalTime,
+  secondsToDuration,
+  secondsToTime,
+} from '~domains/session/utils'
+import { date } from '~services/date'
 
 const Home = () => {
   return (
@@ -38,12 +47,95 @@ const Home = () => {
               )}{' '}
             </span>
           </p>
+          <p>
+            Average pace
+            <span className='ml-1 px-2 rounded-md py-1 bg-pink-200 text-pink-900 font-black'>
+              {getPaceFromSessions(sessions)} / mile
+            </span>
+          </p>
         </div>
       </header>
-      <main className='p-6 space-y-3'>
-        {sessions.map((session, ix) => {
-          return <SessionBlock key={ix} session={session} />
-        })}
+      <main className='p-6 space-y-6'>
+        <div className='grid grid-cols-3 gap-3'>
+          <Leaderboard
+            title='Furthest distance'
+            records={[...sessions]
+              .sort((a, b) => {
+                return b.snapshots[b.snapshots.length - 1].mileage <
+                  a.snapshots[a.snapshots.length - 1].mileage
+                  ? -1
+                  : 1
+              })
+              .map((session) => {
+                const str =
+                  session.snapshots[
+                    session.snapshots.length - 1
+                  ].mileage.toFixed(2) + ' mi'
+
+                return (
+                  <>
+                    {str}
+                    <span className='text-xs px-1 py-1 ml-1 italic font-light'>
+                      {date(session.dateTime).format('DD MMM YYYY')}
+                    </span>
+                  </>
+                )
+              })}
+          />
+          <Leaderboard
+            title='Longest session'
+            records={[...sessions]
+              .sort((a, b) => {
+                return b.snapshots[b.snapshots.length - 1].time <
+                  a.snapshots[a.snapshots.length - 1].time
+                  ? -1
+                  : 1
+              })
+              .map((session) => {
+                const str = secondsToTime(getSessionFinalTime(session))
+
+                return (
+                  <>
+                    {str}
+                    <span className='text-xs px-1 py-1 ml-1 italic font-light'>
+                      {date(session.dateTime).format('DD MMM YYYY')}
+                    </span>
+                  </>
+                )
+              })}
+          />
+          <Leaderboard
+            title='Fastest pace'
+            records={[...sessions]
+              .sort((a, b) => {
+                return getRawSessionPace(b) < getRawSessionPace(a) ? 1 : -1
+              })
+              .map((session) => {
+                const str =
+                  secondsToTime(getRawSessionPace(session)) + ' / mile'
+
+                return (
+                  <>
+                    {str}
+                    <span className='text-xs px-1 py-1 ml-1 italic font-light'>
+                      {date(session.dateTime).format('DD MMM YYYY')}
+                    </span>
+                  </>
+                )
+              })}
+          />
+        </div>
+        <div className='space-y-3'>
+          {sessions.map((session, ix) => {
+            return (
+              <SessionBlock
+                key={ix}
+                averagePace={getRawPaceFromSessions(sessions)}
+                session={session}
+              />
+            )
+          })}
+        </div>
       </main>
     </div>
   )
