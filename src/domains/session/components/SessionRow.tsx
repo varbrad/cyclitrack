@@ -26,7 +26,7 @@ const SessionRow = ({ session }: Props) => {
           className='ml-auto px-2 bg-purple-600 text-white font-black rounded-lg'
           onClick={() => setOpen(!open)}
         >
-          OPEN
+          {open ? 'CLOSE' : 'OPEN'}
         </button>
       </div>
     </div>
