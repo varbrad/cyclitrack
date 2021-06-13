@@ -2,6 +2,7 @@ import Leaderboard from '~domains/records/Leaderboard'
 import SessionBlock from '~domains/session/components/SessionBlock'
 import { sessions } from '~domains/session/types'
 import {
+  getAverageSessionsSpeed,
   getPaceFromSessions,
   getRawPaceFromSessions,
   getRawSessionPace,
@@ -51,6 +52,12 @@ const Home = () => {
             Average pace
             <span className='ml-1 px-2 rounded-md py-1 bg-pink-200 text-pink-900 font-black'>
               {getPaceFromSessions(sessions)} / mile
+            </span>
+          </p>
+          <p>
+            Average speed
+            <span className='ml-1 px-2 rounded-md py-1 bg-indigo-200 text-indigo-900 font-black'>
+              {getAverageSessionsSpeed(sessions).toFixed(2)} mph
             </span>
           </p>
         </div>

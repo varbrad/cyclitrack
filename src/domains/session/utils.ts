@@ -92,3 +92,20 @@ export const getSnapshotPace = (snapshot: SessionSnapshot) => {
   const totalSeconds = Math.round(snapshot.time / snapshot.mileage)
   return secondsToTime(totalSeconds)
 }
+
+export const getLastSnapshot = (session: Session): SessionSnapshot => {
+  return session.snapshots[session.snapshots.length - 1]
+}
+
+export const getSessionSpeed = (session: Session) => {
+  const last = getLastSnapshot(session)
+  return last.mileage / (last.time / 3600)
+}
+
+export const getAverageSessionsSpeed = (sessions: Session[]) => {
+  const snapshots = sessions.map(getLastSnapshot)
+  const mileage = snapshots.reduce((prev, curr) => prev + curr.mileage, 0)
+  const time = snapshots.reduce((prev, curr) => prev + curr.time, 0)
+
+  return mileage / (time / 3600)
+}

@@ -6,6 +6,7 @@ import type { Session } from '../types'
 import {
   getSessionDistance,
   getSessionDuration,
+  getSessionSpeed,
   getSnapshotPace,
   getSnapshotTime,
   secondsToTime,
@@ -41,6 +42,9 @@ const SessionBlock = ({ averagePace, session }: Props) => {
               )
             )}{' '}
             / mile
+          </span>
+          <span className='px-2 py-1 font-black bg-indigo-500 text-indigo-100 rounded-md'>
+            {getSessionSpeed(session).toFixed(2)} mph
           </span>
         </div>
         <div className='ml-auto flex flex-row items-center gap-3'>
