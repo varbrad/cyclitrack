@@ -9,6 +9,19 @@ export interface Session {
   snapshots: SessionSnapshot[]
 }
 
+const session4: Session = {
+  dateTime: new Date('2021-08-02T21:11:00.000Z'),
+  difficulty: 5,
+  snapshots: [
+    { mileage: 1.00, time: 211 },
+    { mileage: 2.00, time: 425 },
+    { mileage: 3.00, time: 639 },
+    { mileage: 4.00, time: 840 },
+    { mileage: 4.26, time: 900 },
+    { mileage: 4.89, time: 1080 },
+  ]
+}
+
 const session3: Session = {
   dateTime: new Date('2021-06-13T07:17:00.000Z'),
   difficulty: 5,
@@ -90,4 +103,4 @@ const session1: Session = {
   ],
 }
 
-export const sessions: Session[] = [session3, session2, session1]
+export const sessions: Session[] = [session4, session3, session2, session1]
